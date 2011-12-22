@@ -46,8 +46,26 @@ class Main extends CI_Controller {
         $this->load->view('main_results_view', $data);
         $this->load->view('footer_view');
 
+	}
+
+	public function loops()
+	{
+	    $this->load->model('Main_model');
+
+        $data['title']   = 'Loops grouped by structure';
+        $data['baseurl'] = base_url();
+        $data['results'] = $this->Main_model->get_loops();
+        $data['labels']  = $this->labels;
+
+        $this->load->view('header_view', $data);
+        $this->load->view('menu_view', $data);
+//         print_r($data['results']);
+
+        $this->load->view('main_loops_view', $data);
+        $this->load->view('footer_view');
 
 	}
+
 }
 
 /* End of file main.php */

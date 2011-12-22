@@ -31,7 +31,7 @@
 
     <!-- Le styles -->
     <link href="<?php echo $baseurl;?>css/bootstrap.min.css" rel="stylesheet">
-    <link href="<?php echo $baseurl;?>css/motifatlas.css" rel="stylesheet">
+    <link href="<?php echo $baseurl;?>css/ty1.css" rel="stylesheet">
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="images/favicon.ico">
