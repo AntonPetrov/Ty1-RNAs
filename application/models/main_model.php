@@ -3,10 +3,13 @@ class Main_model extends CI_Model {
 
     function __construct()
     {
-        $this->TOP   = 3;
-        $this->CELLS = 8;
-        $this->MAXTD = $this->TOP * $this->CELLS; // 8 tds per row
+        $this->TOP   = 3; // top 3 matches are listed
+        $this->CELLS = 8; // there are 8 td elements in each row of webjar3d output
+        $this->MAXTD = $this->TOP * $this->CELLS; // analyze 24 tds
+
         $this->location = '/Servers/rna.bgsu.edu/img/ty1/data/';
+        $this->img_url  = 'http://rna.bgsu.edu/img/ty1/ss';
+        $this->data_url = 'http://rna.bgsu.edu/img/ty1/data';
 
         $this->header = array('Group',
                               'Mean Log Probability',
@@ -16,6 +19,14 @@ class Main_model extends CI_Model {
                               'Mean Min Edit Distance',
                               'Median Min Edit Distance',
                               'Signature');
+        $this->labels = array('str1'=>'-199.9',
+                              'str2'=>'-199.3',
+                              'str3'=>'-198.1',
+                              'str4'=>'-195.1',
+                              'str5'=>'-194.1',
+                              'str6'=>'-193.8',
+                              'str7'=>'-188.3');
+
         parent::__construct();
     }
 
@@ -39,7 +50,7 @@ class Main_model extends CI_Model {
             fclose($file);
             $vars_count = count($variants);
             $variants = implode(', ',$variants);
-            $results .= "<strong>#{$count}</strong> $htmlfile $vars_count variants <br> $variants";
+            $results .= "<strong>#{$count}</strong> <a href='{$this->data_url}/{$htmlfile}' target='_blank'>$htmlfile</a> $vars_count variants <br> $variants";
             $count++;
 
             // read top 3*8 <td>
@@ -56,15 +67,22 @@ class Main_model extends CI_Model {
 
             // convert to rows
             $data = array();
-            for ($i=0;$i<$this->TOP;$i++) {
-                for ($j=0;$j<$this->CELLS;$j++) {
+            for ($i=0; $i < $this->TOP; $i++) {
+                for ($j=0; $j < $this->CELLS; $j++) {
                     $cell = array_shift($tds);
                     $cell = str_replace('<td>','',$cell);
                     $cell = str_replace("<td align='right'>",'',$cell);
                     $cell = str_replace('</td>','',$cell);
 
-                    if ($j==0) {
+                    // add radiobutton to the first td in the row
+                    if ($j == 0) {
                         $cell = "<input type='radio' class='exemplar' name='r'>" . $cell;
+                    }
+                    // color mean percentiles
+                    if ($j == 3) {
+                        if ($cell > 80) {
+                            $cell = '<label class="label success">' . $cell . '</label>';
+                        }
                     }
 
                     $data[$i][] = $cell;
@@ -87,15 +105,8 @@ class Main_model extends CI_Model {
         // get files, sort by il and hl
         if ($handle = opendir($this->location)) {
             while (false !== ($entry = readdir($handle))) {
-//                 if (preg_match("/^{$id}.+?fasta$/",$entry)) {
-//                     if (substr_count($entry,'_') == 2) {
-//                         $fasta['hl'][] = $entry;
-//                     } else {
-//                         $fasta['il'][] = $entry;
-//                     }
-                // } else
                 if (preg_match("/^{$id}.+?html$/",$entry)) {
-                    if (substr_count($entry,'_') < 4) {
+                    if (substr_count($entry,'_') == 2) {
                         $html['hl'][] = $entry;
                     } else {
                         $html['il'][] = $entry;
@@ -106,22 +117,13 @@ class Main_model extends CI_Model {
         }
 
         $results['il'] = $this->process_results($html['il']);
-//         $results['hl'] = $this->process_results($html['hl']);
+        $results['hl'] = $this->process_results($html['hl']);
 
         return $results;
     }
 
     function get_ss_diagrams()
     {
-        $labels = array('str1'=>'-199.9',
-                        'str2'=>'-199.3',
-                        'str3'=>'-198.1',
-                        'str4'=>'-195.1',
-                        'str5'=>'-194.1',
-                        'str6'=>'-193.8',
-                        'str7'=>'-188.3');
-
-        $url = 'http://rna.bgsu.edu/img/ty1/ss';
         if ($handle = opendir('/Servers/rna.bgsu.edu/img/ty1/ss')) {
             while (false !== ($entry = readdir($handle))) {
                 if ($entry != "." && $entry != ".." && $entry != ".DS_Store") {
@@ -136,9 +138,9 @@ class Main_model extends CI_Model {
             $file = substr($img,0,4);
             $text .= <<<EOT
               <li>
-                <a href="{$url}/{$img}" class='fancybox' rel='g'>
-                  <img class="thumbnail span4" src="$url/{$img}" alt="">
-                  <a href="{$baseurl}main/results/$file">$labels[$file]</a>
+                <a href="{$this->img_url}/{$img}" class='fancybox' rel='ss'>
+                  <img class="thumbnail span4" src="$this->img_url/{$img}" alt="">
+                  <a href="{$baseurl}main/results/$file">$this->labels[$file]</a>
                 </a>
               </li>
 EOT;

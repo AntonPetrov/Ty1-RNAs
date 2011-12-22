@@ -68,7 +68,6 @@
                     jmolScript('select 1.0;spacefill off;center 1.1;');
                     jmolScript('frame *;display displayed and not 1.2;');
                     jmolScript('select hetero;color pink;');
-//                     jmolScript('zoom 150');
             }
 
           $(function () {
