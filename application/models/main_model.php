@@ -117,7 +117,7 @@ class Main_model extends CI_Model {
         }
 
         $results['il'] = $this->process_results($html['il']);
-        $results['hl'] = $this->process_results($html['hl']);
+//         $results['hl'] = $this->process_results($html['hl']);
 
         return $results;
     }
