@@ -140,7 +140,7 @@ class Main_model extends CI_Model {
               <li>
                 <a href="{$this->img_url}/{$img}" class='fancybox' rel='ss'>
                   <img class="thumbnail span4" src="$this->img_url/{$img}" alt="">
-                  <a href="{$baseurl}main/results/$file">$this->labels[$file]</a>
+                  <a href="{$baseurl}main/results/$file">{$this->labels[$file]}</a>
                 </a>
               </li>
 EOT;
