@@ -35,23 +35,29 @@ class Main_model extends CI_Model {
         $results = '';
 
         // open html file
-        $count = 1;
+        $loop_count = 1;
         foreach ($file_list as $htmlfile) {
 
             // open fasta file
             $file = fopen($this->location . str_replace('.html','.fasta',$htmlfile), "r") or exit("Unable to open file!");
             $variants = array();
+            $counts   = array();
             while(!feof($file)) {
                 $line = fgets($file);
                 if (preg_match('/^(A|C|G|U)/',$line)) {
                     $variants[] = $line;
+                } elseif (preg_match('/>(\d+)/',$line,$matches)) {
+                    $counts[] = $matches[1];
                 }
             }
             fclose($file);
             $vars_count = count($variants);
+            for ($i=0; $i < $vars_count; $i++) {
+                $variants[$i] = $variants[$i] . '(' . $counts[$i] . ')';
+            }
             $variants = implode(', ',$variants);
-            $results .= "<strong>#{$count}</strong> <a href='{$this->data_url}/{$htmlfile}' target='_blank'>$htmlfile</a> $vars_count variants <br> $variants";
-            $count++;
+            $results .= "<strong>#{$loop_count}</strong> <a href='{$this->data_url}/{$htmlfile}' target='_blank'>$htmlfile</a> $vars_count variants <br> $variants";
+            $loop_count++;
 
             // read top 3*8 <td>
             $file = fopen($this->location . $htmlfile, "r") or exit("Unable to open file!");
