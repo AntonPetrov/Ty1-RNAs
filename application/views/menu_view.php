@@ -22,7 +22,7 @@
                 </ul>
             </li>
 
-            <li><a href="<?=$baseurl?>loops" >Loops</a></li>
+            <li><a href="<?=$baseurl?>main/loops" >Loops</a></li>
 
             <li><a href="http://rna.bgsu.edu/research/jar3d" target="_blank">JAR3D</a></li>
             <li><a href="http://goo.gl/aYyy4" target="_blank">Google Doc</a></li>
