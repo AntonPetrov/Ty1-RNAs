@@ -59,8 +59,6 @@ class Main extends CI_Controller {
 
         $this->load->view('header_view', $data);
         $this->load->view('menu_view', $data);
-//         print_r($data['results']);
-
         $this->load->view('main_loops_view', $data);
         $this->load->view('footer_view');
 

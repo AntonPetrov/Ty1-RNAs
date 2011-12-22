@@ -48,6 +48,10 @@ body {
 input[type=radio] {
     margin-left: 5px;
 }
+.jmolheight {
+    height:340px;
+    width:350px;
+}
 
 body.home {
     padding-top: 60px;
