@@ -15,3 +15,4 @@ application/cache/*
 */logs/!index.html
 */cache/*
 */cache/!index.html
+*.m~
