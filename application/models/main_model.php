@@ -171,6 +171,11 @@ class Main_model extends CI_Model {
                 if ($j == 0) {
                     $cell = "<input type='radio' class='exemplar' name='r'>" . $cell;
                 }
+
+                if (in_array($j,array(1,2,3,4))) {
+                    $cell = round($cell,2);
+                }
+
                 // color mean percentiles
                 if ($j == 3) {
                     if ($cell > 80) {
@@ -186,9 +191,6 @@ class Main_model extends CI_Model {
                     }
                 }
 
-                if (in_array($j,array(1,2,3,4))) {
-                    $cell = round($cell,1);
-                }
 
                 $data[$i][] = $cell;
             }
