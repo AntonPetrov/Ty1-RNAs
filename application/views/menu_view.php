@@ -4,8 +4,10 @@
           <a class="brand" href="<?php echo $baseurl;?>">Ty1 Analysis</a>
           <ul class="nav">
 
+            <li><a href="<?php echo $baseurl;?>">Alternative structures</a></li>
+
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Alternative Structures</a>
+                <a href="#" class="dropdown-toggle">Sans pseudoknot</a>
                 <ul class="dropdown-menu">
                     <?php
                         $labels = array('str1'=>'-199.9',

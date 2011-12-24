@@ -1,7 +1,8 @@
-% this program creates a bash script which has to be run in terminal 
-% example: bash matlab/webjar3d_bash_script.sh
+% this program creates a bash script which has to be run in terminal like so:
+% bash matlab/webjar3d_bash_script.sh
 % it runs webjar3d on all fasta files
 % the resulting .html files are in ~/Dropbox/BGSURNA/Motifs
+% fasta files are in ~/Dropbox/BGSURNA/Motifs/Sequences
 
 % useful commands once everything is done:
 % mv ~/Dropbox/BGSURNA/Motifs/str*html /Servers/rna.bgsu.edu/img/ty1/data_new/
@@ -11,8 +12,14 @@ function [] = aParseAlainsData()
 
     global WEBJAR3D RUN_DIR;
 
-    dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/newRNAstruct644.bracket';
-    clustalfile = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/analysis/all_sequences_aligned.txt';
+    % input for the original 7 alternative structures
+%     dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/newRNAstruct644.bracket';
+
+    % input for the pseudoknot structures
+    dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/analysis/pseudoknot/pseudoknot_removed_dot_bracket.txt';    
+    
+    clustalfile = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/analysis/original_sequences/all_sequences_aligned.txt';
+
 
     WEBJAR3D   = '/Users/anton/Dropbox/BGSURNA/Motifs';
     RUN_DIR    = '/Users/anton/Dropbox/BGSURNA/Motifs/Sequences';
