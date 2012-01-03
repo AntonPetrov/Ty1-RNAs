@@ -15,7 +15,7 @@ class Main_model extends CI_Model {
         $this->CELLS = 8; // there are 8 td elements in each row of webjar3d output
         $this->MAXTD = $this->TOP * $this->CELLS; // analyze 24 tds
 
-        $this->location     = '/Servers/rna.bgsu.edu/img/ty1/data/';
+        $this->location     = '/Servers/rna.bgsu.edu/img/ty1/data_new/';
         $this->img_location = '/Servers/rna.bgsu.edu/img/ty1/ss/';
 //         $this->location['pseudoknot'] = '/Servers/rna.bgsu.edu/img/ty1/pseudoknot/';
 
@@ -68,7 +68,7 @@ class Main_model extends CI_Model {
     {
         $html = $this->list_html_files();
         $results['il'] = $this->group_loops_by_structure($html['il']);
-//         $results['hl'] = $this->group_loops_by_structure($html['hl']);
+        $results['hl'] = $this->group_loops_by_structure($html['hl']);
         return $results;
     }
 
@@ -247,7 +247,7 @@ class Main_model extends CI_Model {
         $html = $this->list_html_files($id);
 
         $results['il'] = $this->process_results($html['il']);
-//         $results['hl'] = $this->process_results($html['hl']);
+        $results['hl'] = $this->process_results($html['hl']);
 
         return $results;
     }
