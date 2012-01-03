@@ -17,9 +17,13 @@ function [] = aParseAlainsData(input_type)
         dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/newRNAstruct644.bracket';
         prefix = 'str';
     elseif input_type == 2
-        % input for the pseudoknot structures
+        % input for the pseudoknot structures processed by the K2N webserver
         dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/analysis/pseudoknot/pseudoknot_removed_dot_bracket.txt';    
         prefix = 'pseudoknot';
+    elseif input_type == 3
+        % input for the pseudoknot structures processed by RNAStructure
+        dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/analysis/95_pseudoknots_removed.txt';
+        prefix = 'pseudo';        
     else
         error('Specify input_type');
     end
