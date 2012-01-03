@@ -24,7 +24,13 @@
                 </ul>
             </li>
 
-            <li><a href="<?=$baseurl?>main/loops" >Loops</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle">Loops</a>
+                <ul class="dropdown-menu">
+                    <li><a href='<?=$baseurl?>main/loops/rnastructure'>RNAStructure</a></li>
+                    <li><a href='<?=$baseurl?>main/loops/k2n'>K2N</a></li>
+                </ul>
+            </li>
 
             <li><a href="http://rna.bgsu.edu/research/jar3d" target="_blank">JAR3D</a></li>
             <li><a href="http://goo.gl/aYyy4" target="_blank">Google Doc</a></li>
