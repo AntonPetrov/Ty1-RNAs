@@ -20,8 +20,8 @@
                 </div>
 
                 <div class="tab-pane" id="hls">
-<!--                     <?=$results['hl']?> -->
-                    Coming soon.
+                    <?=$results['hl']?>
+<!--                     Coming soon. -->
                 </div>
 
             </div>
@@ -51,9 +51,13 @@
                 show_first_instance_in_jmol(groupNum);
             }
 
-            function show_first_instance_in_jmol(id) {
+            function show_first_instance_in_jmol(id,loopType) {
                 jmolScript('zap;');
-                jmolScript('load "http://rna.bgsu.edu/research/anton/share/iljun6/PDBDatabase/'+id+'/'+id+'_1.pdb";');
+                if (loopType == 'IL') {
+                    jmolScript('load "http://rna.bgsu.edu/research/anton/share/iljun6/PDBDatabase/'+id+'/'+id+'_1.pdb";');
+                } else {
+                    jmolScript('load "http://rna.bgsu.edu/research/anton/share/hljun2/PDBDatabase/'+id+'/'+id+'_1.pdb";');
+                }
                 apply_jmol_styling();
             }
 
@@ -78,8 +82,9 @@
             $('.exemplar').click(function() {
 
                 var groupNum = $(this).next().attr("href").match(/(Group_.+?).html/)[1];
+                var loopType = $(this).next().html().substring(0,2);
 //                 var loop_id = t.next().html();
-                show_first_instance_in_jmol(groupNum);
+                show_first_instance_in_jmol(groupNum,loopType);
             });
 
 //             jmol_neighborhood_button_click('neighborhood');
