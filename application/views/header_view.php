@@ -22,7 +22,7 @@
     <script src="<?php echo $baseurl;?>js/jquery.tablesorter.min.js" type="text/javascript"></script>
     <script src="<?php echo $baseurl;?>js/dragtable.js" type="text/javascript"></script>
 
-    <script src="<?php echo $baseurl;?>js/MotifAtlas.js" type="text/javascript"></script>
+    <script src="<?php echo $baseurl;?>js/ty1.js" type="text/javascript"></script>
 
     <!-- fancybox -->
     <link rel="stylesheet" href="<?php echo $baseurl;?>js/fancybox/jquery.fancybox.css?v=2.0.3" type="text/css" media="screen" />
