@@ -15,7 +15,7 @@ class Main_model extends CI_Model {
         $this->CELLS = 8; // there are 8 td elements in each row of webjar3d output
         $this->MAXTD = $this->TOP * $this->CELLS; // analyze 24 tds
 
-        $this->location     = '/Servers/rna.bgsu.edu/img/ty1/data_new/';
+        $this->location     = '/Servers/rna.bgsu.edu/img/ty1/data/';
         $this->img_location = '/Servers/rna.bgsu.edu/img/ty1/ss/';
 //         $this->location['pseudoknot'] = '/Servers/rna.bgsu.edu/img/ty1/pseudoknot/';
 
