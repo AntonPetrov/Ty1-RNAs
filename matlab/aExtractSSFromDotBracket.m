@@ -7,6 +7,9 @@ function [il_positions,hl_positions] = aExtractSSFromDotBracket(seq)
     dots = length(strfind(seq,'.'));
     brackets = length(strfind(seq,'(')) + length(strfind(seq,')'));    
     if dots + brackets ~= L
+%         seq = strrep(seq,'[','.');
+%         seq = strrep(seq,']','.');        
+%         disp('Pseudoknot detected. Replaced all [ and ] with .');
         disp('Pseudoknot detected. Exiting');
         return;
     end
