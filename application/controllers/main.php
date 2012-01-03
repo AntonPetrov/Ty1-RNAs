@@ -40,7 +40,7 @@ class Main extends CI_Controller {
         $data['labels']  = $this->labels;
         $data['graphs']  = $this->Main_model->get_ss_diagrams();
 
-        $this->table->set_heading('#','id','Internal loops','Hairpins');
+        $this->table->set_heading('#','id','Energy','Internal loops','Hairpins');
         $tmpl = array( 'table_open'  => '<table class="condensed-table bordered-table" id="sortable">' );
         $this->table->set_template($tmpl);
         $data['loops'] = $this->table->generate($data['loops']);

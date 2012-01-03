@@ -61,6 +61,7 @@ class Main_model extends CI_Model {
         foreach ($ils as $k => $v) {
             $table[] = array($i,
                              anchor(array('main','results',$k),$k),
+                             $this->labels[$k],
                              $v,
                              $hls[$k]);
             $i++;
