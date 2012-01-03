@@ -8,15 +8,21 @@
 % mv ~/Dropbox/BGSURNA/Motifs/str*html /Servers/rna.bgsu.edu/img/ty1/data_new/
 % mv ~/Dropbox/BGSURNA/Motifs/Sequences/str*fasta /Servers/rna.bgsu.edu/img/ty1/data_new/
 
-function [] = aParseAlainsData()
+function [] = aParseAlainsData(input_type)
 
     global WEBJAR3D RUN_DIR;
 
-    % input for the original 7 alternative structures
-%     dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/newRNAstruct644.bracket';
-
-    % input for the pseudoknot structures
-    dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/analysis/pseudoknot/pseudoknot_removed_dot_bracket.txt';    
+    if input_type == 1
+        % input for the original 7 alternative structures
+        dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/newRNAstruct644.bracket';
+        prefix = 'str';
+    elseif input_type == 2
+        % input for the pseudoknot structures
+        dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/analysis/pseudoknot/pseudoknot_removed_dot_bracket.txt';    
+        prefix = 'pseudoknot';
+    else
+        error('Specify input_type');
+    end
     
     clustalfile = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/analysis/original_sequences/all_sequences_aligned.txt';
 
@@ -24,7 +30,7 @@ function [] = aParseAlainsData()
     WEBJAR3D   = '/Users/anton/Dropbox/BGSURNA/Motifs';
     RUN_DIR    = '/Users/anton/Dropbox/BGSURNA/Motifs/Sequences';
     
-    bashfile    = 'webjar3d_bash_script.sh';
+    bashfile    = sprintf('webjar3d_bash_script_%s.sh', prefix);
     fid = fopen(bashfile,'w');
     fprintf(fid','cd %s;\n', WEBJAR3D);
 
@@ -55,7 +61,7 @@ function [] = aParseAlainsData()
             il_variants = get_sequence_variants(loop);
             
             % id like str1_15_20_50_55
-            id = sprintf('str%i_%i_%i_%i_%i',i,il(j,1),il(j,2),il(j,3),il(j,4));
+            id = sprintf('%s%i_%i_%i_%i_%i',prefix,i,il(j,1),il(j,2),il(j,3),il(j,4));
 
             % write out a fasta file with sequence variants
             create_fasta_file(id,il_variants);
@@ -67,7 +73,7 @@ function [] = aParseAlainsData()
             hairpin = S(:,c(hl(j,1)):c(hl(j,2)));
             hl_variants = get_sequence_variants(hairpin);
 
-            id = sprintf('str%i_%i_%i',i,hl(j,1),hl(j,2));
+            id = sprintf('%s%i_%i_%i',prefix,i,hl(j,1),hl(j,2));
 
             create_fasta_file(id,hl_variants);
             generate_jar3d_command(id,fid);
