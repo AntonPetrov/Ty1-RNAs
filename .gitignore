@@ -16,3 +16,4 @@ application/cache/*
 */cache/*
 */cache/!index.html
 *.m~
+pseudoknot_removal/*
