@@ -8,28 +8,18 @@
 % mv ~/Dropbox/BGSURNA/Motifs/str*html /Servers/rna.bgsu.edu/img/ty1/data_new/
 % mv ~/Dropbox/BGSURNA/Motifs/Sequences/str*fasta /Servers/rna.bgsu.edu/img/ty1/data_new/
 
-function [] = aParseAlainsData(input_type)
+% there is only 1 16S sequence, so no need to establish correspondences or
+% to read in a clustalw alignment.
+
+function [] = aParseAlainsData()
 
     global WEBJAR3D RUN_DIR;
 
-    if input_type == 1
-        % input for the original 7 alternative structures
-        dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/newRNAstruct644.bracket';
-        prefix = 'str';
-    elseif input_type == 2
-        % input for the pseudoknot structures processed by the K2N webserver
-        dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/analysis/pseudoknot/pseudoknot_removed_dot_bracket.txt';    
-        prefix = 'pseudoknot';
-    elseif input_type == 3
-        % input for the pseudoknot structures processed by RNAStructure
-        dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/analysis/95_pseudoknots_removed.txt';
-        prefix = 'pseudo';        
-    else
-        error('Specify input_type');
-    end
+    % input for the original 7 alternative structures
+    dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/16S_with_SHAPE/16S_ecoli_dotbracket.txt';
+    prefix = '16s';
     
-    clustalfile = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/analysis/original_sequences/all_sequences_aligned.txt';
-
+    ec_sequence = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/16S_with_SHAPE/ec.fasta';
 
     WEBJAR3D   = '/Users/anton/Dropbox/BGSURNA/Motifs';
     RUN_DIR    = '/Users/anton/Dropbox/BGSURNA/Motifs/Sequences';
@@ -38,15 +28,14 @@ function [] = aParseAlainsData(input_type)
     fid = fopen(bashfile,'w');
     fprintf(fid','cd %s;\n', WEBJAR3D);
 
-    % get sequences and headers
-    [S, H] = read_clustal_alignment_file(clustalfile);
+    % get 16s ecoli sequence and header
+    [H, S] = fastaread(ec_sequence);
     
     % get annotations, sequences and secondary structures 
     [a,s,ss] = read_dot_bracket_file(dotbracket);
     
-    % map the sequence from dot-bracket file to the same sequence 
-    % in the alignment, which is hardcoded at the moment.
-    c = establish_correspondence(s{1},S(14,:));
+    % 1 to 1 correspondence between dotbracket sequences and the original
+    c = 1:length(S);
     
     asterisks(1:length(S(:,1)),1) = '*';
     
