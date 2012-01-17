@@ -11,7 +11,7 @@
 % there is only 1 16S sequence, so no need to establish correspondences or
 % to read in a clustalw alignment.
 
-function [] = aParseAlainsData()
+function [] = aParseAlainsData_16S()
 
     global WEBJAR3D RUN_DIR;
 
@@ -85,35 +85,6 @@ function [] = aParseAlainsData()
 
 end
 
-function [command] = generate_jar3d_command(id, fid)
-
-    global WEBJAR3D;
-
-    command   = ['java -jar webJAR3D_server.jar "' WEBJAR3D '" "' id '.fasta"'];
-    
-    fprintf('%s\n',command);  
-    fprintf(fid, '%s\n',command);            
-
-end
-
-function [] = create_fasta_file(id, variants)
-
-    global RUN_DIR;
-    
-    output = [id '.fasta'];
-    fid = fopen(output,'w');
-    for i = 1:length(variants(:,1))
-        for j = 1:variants{i,2} % write out as many times as there are seq variants
-            fprintf(fid,'>%i times\n%s\n',variants{i,2},variants{i,1});
-        end
-    end
-    fclose(fid);
-            
-    % move job fasta file to the run dir
-    movefile(fullfile(pwd,output),fullfile(RUN_DIR,output));
-
-end
-
 function [result] = get_sequence_variants(S)
 
     N = length(S(:,1));
@@ -138,51 +109,6 @@ function [result] = get_sequence_variants(S)
     
 end
 
-function [c] = establish_correspondence(ss_seq, al_seq)
-
-    c = 1:length(al_seq);
-    c(strfind(al_seq,'-')) = [];
-
-    if ~isequal(al_seq(c), ss_seq)
-        error('Problem');
-    end
-
-end
-
-function [T,H] = read_clustal_alignment_file(filename)
-
-    fid = fopen(filename);    
-
-    S{1} = [];
-    H = {};
-    
-    tline = fgetl(fid);
-    block = 1;
-    while ischar(tline)
-        if isempty(strfind(tline,'*')) && isempty(strfind(tline,'CLUSTAL')) && length(tline) > 1
-            parts = regexp(tline,'\s+','split');
-            S{block}(end+1,1:length(parts{2})) = parts{2};
-            H{end+1} = parts{1};
-        end
-        if ~isempty(strfind(tline,'*'))
-            block = block + 1;
-            S{block} = '';
-        end
-        tline = fgetl(fid);
-    end
-
-    fclose(fid);    
-    
-    H = H(1:length(S{1}(:,1)));
-    S = S(1:end-1); % discard last ''
-    
-    T = [];
-    for i = 1:length(S)
-        T = [T S{i}]; 
-    end
-
-
-end
 
 function [a,s,ss] = read_dot_bracket_file(filename)
 
@@ -207,60 +133,3 @@ function [a,s,ss] = read_dot_bracket_file(filename)
     fclose(fid);    
 
 end
-
-
-% can't run jar3d from matlab because of some weird java problem even thru system calls
-% will have to switch to bash
-% function [] = run_jar3d(seq,id)
-% 
-%     WEBJAR3D   = '/Users/anton/Dropbox/BGSURNA/Motifs';
-%     INPUT_DIR  = '/Servers/rna.bgsu.edu/research/jar3d/InputScript/Input';
-% %     FAILED_DIR = '/Servers/rna.bgsu.edu/research/jar3d/InputScript/Failed';
-%     RESULTS    = '/Servers/rna.bgsu.edu/research/jar3d/Results';
-%     RUN_DIR    = '/Users/anton/Dropbox/BGSURNA/Motifs/Sequences';
-% 
-%     % create fasta file
-%     fastafile = [id '.fasta'];
-%     fid = fopen(fastafile,'w');
-%     for i = 1:length(seq)
-%         fprintf(fid,'>test\n%s\n',seq{i});
-%     end
-%     fclose(fid);
-%     
-%     aCheckFolder(fullfile(RESULTS,id));
-%         
-%     % move job fasta file to the run dir
-%     movefile(fullfile(pwd,fastafile),fullfile(RUN_DIR,fastafile));
-% 
-% %     my $command = 'mv ' . $INPUT_DIR . '/' . $fasta . ' ' . $RUN_DIR  . '/' . $fasta;
-% % system($command);
-% 
-% % # run webjar3d.jar
-% % $command = "cd $WEBJAR3D; java -jar webJAR3D_server.jar \"$WEBJAR3D\" \"$fasta\" 'IL'";
-% 
-%     % run webjar3d.jar
-%     command = ['cd ' WEBJAR3D '; java -jar webJAR3D_server.jar "' WEBJAR3D '" "' fastafile '"'];
-% %     unix(command);
-% 
-%     fprintf('%s\n',command);
-% 
-% %     unix('perl -e system("ls");');
-% % 
-% % 
-% %     % check if the output file was created
-% %     % if it was, then move it to the final destination
-% %     % if not, place an error report in the final destination
-% % 
-% %     htmlfile = strrep(fastafile,'fasta','html');
-% %     filename = [WEBJAR3D  '/'  htmlfile];
-% % 
-% %     folder = strrep(fastafile,'.fasta','');
-% % 
-% %     if exist(filename,'file')
-% %         movefile(fullfile(RUN_DIR,fastafile),fullfile(RESULTS,folder,fastafile));
-% %         movefile(fullfile(WEBJAR3D,htmlfile),fullfile(RESULTS,folder,'index.html'));
-% %     else
-% %         error('JAR3D failed');
-% %     end
-% 
-% end
