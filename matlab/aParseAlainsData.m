@@ -108,7 +108,9 @@ function [] = create_fasta_file(id, variants)
     output = [id '.fasta'];
     fid = fopen(output,'w');
     for i = 1:length(variants(:,1))
-        fprintf(fid,'>%i times\n%s\n',variants{i,2},variants{i,1});
+        for j = 1:variants{i,2} % write out as many times as there are seq variants
+            fprintf(fid,'>%i times\n%s\n',variants{i,2},variants{i,1});
+        end
     end
     fclose(fid);
             
