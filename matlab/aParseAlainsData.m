@@ -24,9 +24,8 @@ function [] = aParseAlainsData()
     WEBJAR3D   = '/Users/anton/Dropbox/BGSURNA/Motifs';
     RUN_DIR    = '/Users/anton/Dropbox/BGSURNA/Motifs/Sequences';
     
-    bashfile    = sprintf('webjar3d_bash_script_%s.sh', prefix);
-    fid = fopen(bashfile,'w');
-    fprintf(fid','cd %s;\n', WEBJAR3D);
+    ofn = 'loops.csv';
+    fid = fopen(ofn, 'w');
 
     % get 16s ecoli sequence and header
     [H, S] = fastaread(ec_sequence);
@@ -53,12 +52,12 @@ function [] = aParseAlainsData()
 
             il_variants = get_sequence_variants(loop);
             
+            % location, e.g. 15_20_50_55
+            loc = sprintf('%i_%i_%i_%i',il(j,1),il(j,2),il(j,3),il(j,4));
             % id like str1_15_20_50_55
-            id = sprintf('%s%i_%i_%i_%i_%i',prefix,i,il(j,1),il(j,2),il(j,3),il(j,4));
-
-            % write out a fasta file with sequence variants
-            create_fasta_file(id,il_variants);
-            generate_jar3d_command(id,fid);            
+            id  = sprintf('%s%i_%s',prefix,i,loc);
+            
+            output_csv(il_variants, 'il');
         end
         
         % process hls
@@ -66,16 +65,23 @@ function [] = aParseAlainsData()
             hairpin = S(:,c(hl(j,1)):c(hl(j,2)));
             hl_variants = get_sequence_variants(hairpin);
 
-            id = sprintf('%s%i_%i_%i',prefix,i,hl(j,1),hl(j,2));
+            loc = sprintf('%i_%i', hl(j,1),hl(j,2));
+            id = sprintf('%s%i_%s',prefix,i,loc);
 
-            create_fasta_file(id,hl_variants);
-            generate_jar3d_command(id,fid);
+            output_csv(hl_variants, 'hl');
         end           
     end
     
     fclose(fid);
     fprintf('Done\n');
-%     keyboard;
+    
+
+    function [] = output_csv(variants, loop_type)
+        for k = 1:length(variants(:,1))
+            fprintf(fid, '"%s%i","%s","%s","%s","%i"\n', prefix, ... 
+                         i, loop_type, loc, variants{k,1}, variants{k,2});
+        end                
+    end
 
 end
 
