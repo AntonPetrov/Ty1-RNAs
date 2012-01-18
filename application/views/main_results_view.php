@@ -49,7 +49,7 @@
 //             $(".pdb").click(LookUpPDBInfo);
             $(".sortable").tablesorter();
             $('.exemplar').click(function() {
-                var groupNum = $(this).next().attr("href").match(/(Group_.+?).html/)[1];
+                var groupNum = $(this).next().attr("href").match(/(Group_.+?)( reversed)*.html/)[1];
                 var loopType = $(this).next().html().substring(0,2);
                 show_first_instance_in_jmol(groupNum,loopType);
             });

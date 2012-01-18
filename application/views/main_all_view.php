@@ -8,15 +8,17 @@
         </div>
 
         <div class="row">
-            <div class="span6">
+            <div class="span10">
                 <?=$loops?>
             </div>
 
+<!--
             <div class="span6 offset2">
                 <ul class="media-grid">
                     <?=$graphs?>
                 </ul>
             </div>
+ -->
         </div>
 
       </div>

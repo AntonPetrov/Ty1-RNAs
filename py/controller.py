@@ -2,7 +2,7 @@
 
 """
 
-import sys, pdb, csv, os
+import sys, pdb, csv, os, getopt
 
 from BeautifulSoup import BeautifulSoup # For processing HTML
 
@@ -27,7 +27,7 @@ class LoopLocations(Base):
     ss_id  = Column(String(20), primary_key=True)
     location = Column(String(25), primary_key=True)
     loop_type = Column(String(2))
-    seq   = Column(Text)
+    seq   = Column(String(50), primary_key=True)
     count = Column(Integer)
 
 class Jar3dResults(Base):
@@ -36,7 +36,7 @@ class Jar3dResults(Base):
     __tablename__ = 'jar3d_results'
     job_id = Column(String(20), primary_key=True)
     ss_id  = Column(String(20), primary_key=True)
-    location = Column(String(25), primary_key=True)
+    location = Column(String(25), primary_key=True, index=True)
     result_id = Column(Integer, primary_key=True)
     group = Column(Text)
     mean_log_probability = Column(Float)
@@ -54,18 +54,21 @@ class Jar3dController():
     """
     """
 
-    def __init(self):
-        self.RUN_DIR    = '/Users/anton/Dropbox/BGSURNA/Motifs/Sequences';
-        self.matlab_output = 'loops.csv'
-        self.WEBJAR3D   = '/Users/anton/Dropbox/BGSURNA/Motifs';
+    def __init__(self, ifn):
+        self.RUN_DIR    = '/Users/anton/Dropbox/BGSURNA/Motifs/Sequences'
+        self.WEBJAR3D   = '/Users/anton/Dropbox/BGSURNA/Motifs'
         self.RESULTS = '/Users/anton/Dropbox/BGSURNA/Motifs'
         self.FASTALOC = '/Users/anton/Dropbox/BGSURNA/Motifs/Sequences'
 
+        self.matlab_output = ifn
+#         self.job_id = ifn.split('_')[1].split('.')[0]
+        self.job_id = 'pseudo_single'
+
     def import_loop_distances(self):
-        # "16s1","il","18_20_898_902","CAU*GCAAG","1"
+        # "16s","il","18_20_898_902","CAU*GCAAG","1"
         reader = csv.reader(open(self.matlab_output, 'rb'), delimiter=',', quotechar='"')
         for i, row in enumerate(reader):
-            session.add(LoopLocations(job_id='16s',
+            session.merge(LoopLocations(job_id=self.job_id,
                                       ss_id=row[0],
                                       loop_type=row[1],
                                       location=row[2],
@@ -78,7 +81,7 @@ class Jar3dController():
         """
         """
         self.locations = session.query(LoopLocations). \
-                                 filter(LoopLocations.job_id=='16s'). \
+                                 filter(LoopLocations.job_id==self.job_id). \
                                  group_by(LoopLocations.location).all()
 
     def generate_fasta_files(self):
@@ -90,9 +93,9 @@ class Jar3dController():
                                 filter(LoopLocations.ss_id==loc.ss_id). \
                                 filter(LoopLocations.location==loc.location).all():
                 ofn = open(os.path.join(self.RUN_DIR, '%s.fasta' % loop.location), 'w')
-                for i in xrange(loop.count):
-                    ofn.write('>%i times\n' % loop.count)
-                    ofn.write(loop.seq)
+#                 for i in xrange(loop.count):
+                ofn.write('>%i times\n' % loop.count)
+                ofn.write('%s\n' % loop.seq)
                 ofn.close()
 
     def run_jar3d(self):
@@ -120,7 +123,7 @@ class Jar3dController():
                 for td in cols:
                     fields.append(''.join(td.find(text=True)))
                 session.merge(Jar3dResults(
-                    job_id = '16s',
+                    job_id = self.job_id,
                     ss_id  = loc.ss_id,
                     location = loc.location,
                     result_id = i+1,
@@ -143,13 +146,23 @@ class Jar3dController():
 def main(argv):
     """
     """
-    jc = Jar3dController()
+
+    try:
+        opts, args = getopt.getopt(argv, 'i:')
+    except getopt.GetoptError:
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt == '-i':
+            jc = Jar3dController(ifn=arg)
+        else:
+            sys.exit(2)
+
     jc.import_loop_distances()
     jc.select_unique_loops()
     jc.generate_fasta_files()
     jc.run_jar3d()
     jc.import_jar3d_results()
-
 
 
 if __name__ == "__main__":

@@ -17,4 +17,4 @@ application/cache/*
 */cache/!index.html
 *.m~
 pseudoknot_removal/*
-loops.csv
+*.csv

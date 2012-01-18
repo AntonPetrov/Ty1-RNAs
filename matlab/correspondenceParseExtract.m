@@ -8,7 +8,7 @@
 % mv ~/Dropbox/BGSURNA/Motifs/str*html /Servers/rna.bgsu.edu/img/ty1/data_new/
 % mv ~/Dropbox/BGSURNA/Motifs/Sequences/str*fasta /Servers/rna.bgsu.edu/img/ty1/data_new/
 
-function [] = aParseAlainsData(input_type)
+function [] = correspondenceParseExtract(input_type)
 
     global WEBJAR3D RUN_DIR;
 
@@ -34,9 +34,8 @@ function [] = aParseAlainsData(input_type)
     WEBJAR3D   = '/Users/anton/Dropbox/BGSURNA/Motifs';
     RUN_DIR    = '/Users/anton/Dropbox/BGSURNA/Motifs/Sequences';
     
-    bashfile    = sprintf('webjar3d_bash_script_%s.sh', prefix);
-    fid = fopen(bashfile,'w');
-    fprintf(fid','cd %s;\n', WEBJAR3D);
+    ofn = sprintf('loops_%s.csv', prefix);
+    fid = fopen(ofn, 'w');
 
     % get sequences and headers
     [S, H] = read_clustal_alignment_file(clustalfile);
@@ -64,12 +63,12 @@ function [] = aParseAlainsData(input_type)
 
             il_variants = get_sequence_variants(loop);
             
+            % location, e.g. 15_20_50_55
+            loc = sprintf('%i_%i_%i_%i',il(j,1),il(j,2),il(j,3),il(j,4));
             % id like str1_15_20_50_55
-            id = sprintf('%s%i_%i_%i_%i_%i',prefix,i,il(j,1),il(j,2),il(j,3),il(j,4));
-
-            % write out a fasta file with sequence variants
-            create_fasta_file(id,il_variants);
-            generate_jar3d_command(id,fid);            
+            id  = sprintf('%s%i_%s',prefix,i,loc);
+            
+            output_csv(il_variants, 'il');
         end
         
         % process hls
@@ -77,45 +76,23 @@ function [] = aParseAlainsData(input_type)
             hairpin = S(:,c(hl(j,1)):c(hl(j,2)));
             hl_variants = get_sequence_variants(hairpin);
 
-            id = sprintf('%s%i_%i_%i',prefix,i,hl(j,1),hl(j,2));
+            loc = sprintf('%i_%i', hl(j,1),hl(j,2));
+            id = sprintf('%s%i_%s',prefix,i,loc);
 
-            create_fasta_file(id,hl_variants);
-            generate_jar3d_command(id,fid);
+            output_csv(hl_variants, 'hl');
         end           
     end
     
     fclose(fid);
     fprintf('Done\n');
-%     keyboard;
-
-end
-
-function [command] = generate_jar3d_command(id, fid)
-
-    global WEBJAR3D;
-
-    command   = ['java -jar webJAR3D_server.jar "' WEBJAR3D '" "' id '.fasta"'];
     
-    fprintf('%s\n',command);  
-    fprintf(fid, '%s\n',command);            
 
-end
-
-function [] = create_fasta_file(id, variants)
-
-    global RUN_DIR;
-    
-    output = [id '.fasta'];
-    fid = fopen(output,'w');
-    for i = 1:length(variants(:,1))
-        for j = 1:variants{i,2} % write out as many times as there are seq variants
-            fprintf(fid,'>%i times\n%s\n',variants{i,2},variants{i,1});
-        end
+    function [] = output_csv(variants, loop_type)
+        for k = 1:length(variants(:,1))
+            fprintf(fid, '"%s%i","%s","%s","%s","%i"\n', prefix, ... 
+                         i, loop_type, loc, variants{k,1}, variants{k,2});
+        end                
     end
-    fclose(fid);
-            
-    % move job fasta file to the run dir
-    movefile(fullfile(pwd,output),fullfile(RUN_DIR,output));
 
 end
 

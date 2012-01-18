@@ -11,20 +11,20 @@
 % there is only 1 16S sequence, so no need to establish correspondences or
 % to read in a clustalw alignment.
 
-function [] = aParseAlainsData_16S()
+function [] = simpleParseExtract()
 
     global WEBJAR3D RUN_DIR;
 
     % input for the original 7 alternative structures
     dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/16S_with_SHAPE/16S_ecoli_dotbracket.txt';
-    prefix = '16s';
+    prefix = '16S';
     
     ec_sequence = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/16S_with_SHAPE/ec.fasta';
 
     WEBJAR3D   = '/Users/anton/Dropbox/BGSURNA/Motifs';
     RUN_DIR    = '/Users/anton/Dropbox/BGSURNA/Motifs/Sequences';
     
-    ofn = 'loops.csv';
+    ofn = sprintf('loops_%s.csv', prefix);
     fid = fopen(ofn, 'w');
 
     % get 16s ecoli sequence and header
