@@ -61,8 +61,7 @@ class Jar3dController():
         self.FASTALOC = '/Users/anton/Dropbox/BGSURNA/Motifs/Sequences'
 
         self.matlab_output = ifn
-#         self.job_id = ifn.split('_')[1].split('.')[0]
-        self.job_id = 'pseudo_single'
+        self.job_id = ifn.split('_')[1].split('.')[0]
 
     def import_loop_distances(self):
         # "16s","il","18_20_898_902","CAU*GCAAG","1"
@@ -93,9 +92,9 @@ class Jar3dController():
                                 filter(LoopLocations.ss_id==loc.ss_id). \
                                 filter(LoopLocations.location==loc.location).all():
                 ofn = open(os.path.join(self.RUN_DIR, '%s.fasta' % loop.location), 'w')
-#                 for i in xrange(loop.count):
-                ofn.write('>%i times\n' % loop.count)
-                ofn.write('%s\n' % loop.seq)
+                for i in xrange(loop.count):
+                    ofn.write('>%i times\n' % loop.count)
+                    ofn.write('%s\n' % loop.seq)
                 ofn.close()
 
     def run_jar3d(self):
