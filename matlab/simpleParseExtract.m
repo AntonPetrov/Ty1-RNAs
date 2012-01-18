@@ -11,14 +11,19 @@
 % there is only 1 16S sequence, so no need to establish correspondences or
 % to read in a clustalw alignment.
 
-function [] = simpleParseExtract()
+function [] = simpleParseExtract(input_type)
 
     global WEBJAR3D RUN_DIR;
 
-    % input for the original 7 alternative structures
-    dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/16S_with_SHAPE/16S_ecoli_dotbracket.txt';
-    prefix = '16S';
-    
+    if input_type == 1    
+        % input for the 100 ecoli 16s structures predicted with SHAPE
+        dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/16S_with_SHAPE/16S_ecoli_dotbracket.txt';
+        prefix = '16S';
+    elseif input_type == 2
+        % input for the original 16S secondary structure (STRAND db)
+        dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/analysis/16s_ecoli_ss.bracket';
+        prefix = '16Strue';               
+    end
     ec_sequence = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/16S_with_SHAPE/ec.fasta';
 
     WEBJAR3D   = '/Users/anton/Dropbox/BGSURNA/Motifs';

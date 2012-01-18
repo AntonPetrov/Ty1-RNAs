@@ -23,7 +23,11 @@ function [] = correspondenceParseExtract(input_type)
     elseif input_type == 3
         % input for the pseudoknot structures processed by RNAStructure
         dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/analysis/95_pseudoknots_removed.txt';
-        prefix = 'pseudo';        
+        prefix = 'pseudo';       
+    elseif input_type == 4
+        % input for the rnaalifold predicted ty1, no shape
+        dotbracket  = '/Users/anton/Dropbox/BGSU_shared/Data_from_Alain/analysis/rnaalifold_ty1_prediction.txt';
+        prefix = 'ty1rnaalifold';        
     else
         error('Specify input_type');
     end
