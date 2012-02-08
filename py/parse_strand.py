@@ -5,8 +5,8 @@ import string
 
 def parse_coords(coords):
     coords = coords.split(':')[1].split(',')
-    parsed = map(lambda s: s.strip().translate(translate), coords)
-    parsed = '_'.join(parsed)
+    parsed = sum([x.strip().split('-') for x in coords], [])
+    parsed = '_'.join(sorted(parsed))
     return parsed
 
 args = args[1:]
